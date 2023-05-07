@@ -83,7 +83,7 @@ impl<T> SyntaxTree<T> {
     /// The method returns a mutable reference to the first SyntaxTree instance for which the predicate
     /// return true. If no instance is found, None is returned.
     pub fn find_node_mut(&mut self, predicate: fn(&SyntaxTree<T>) -> bool,
-    ) -> Option<&mut SyntaxTree<T>> {       //hier stand ursprünglich: -> Option<&SyntaxTree<T>>
+    ) -> Option<&mut SyntaxTree<T>> {
         if predicate(self) {
             return Some(self);
         } else {
