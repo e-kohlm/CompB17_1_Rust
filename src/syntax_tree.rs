@@ -23,12 +23,16 @@ fn next_id() -> ID {
 impl<T> SyntaxTree<T> {
     /// Create a SyntaxTree with a root node that carries the given value
     pub fn new(value: T) -> SyntaxTree<T> {
-        todo!()
+        SyntaxTree {
+            id: next_id(),
+            value,
+            children: Vec::new(),
+        }
     }
 
     /// Add another SyntaxTree as last child of this tree
     pub fn push_node(&mut self, new_node: SyntaxTree<T>) {
-        todo!()
+        self.children.push(new_node);
     }
 
     /// Create a new SyntaxTree with a root node that carries the given value. Add the created tree
@@ -39,7 +43,7 @@ impl<T> SyntaxTree<T> {
 
     /// Add another SyntaxTree as first child of this tree
     pub fn prepend_node(&mut self, new_node: SyntaxTree<T>) {
-        todo!()
+        self.children.insert(0, new_node);
     }
 
     /// Create a new SyntaxTree with a root node that carries the given value. Add the created tree
@@ -66,18 +70,30 @@ impl<T> SyntaxTree<T> {
         if predicate(self) {
             Some(self)
         } else {
-            todo!()
+            for child in &self.children {
+                if let Some(node) = child.find_node(predicate) {
+                    return Some(node);
+                }
+            }
+            None
         }
     }
 
     /// Perform a depth-first search with the given predicate.
     /// The method returns a mutable reference to the first SyntaxTree instance for which the predicate
     /// return true. If no instance is found, None is returned.
-    pub fn find_node_mut(
-        &mut self,
-        predicate: fn(&SyntaxTree<T>) -> bool,
-    ) -> Option<&SyntaxTree<T>> {
-        todo!()
+    pub fn find_node_mut(&mut self, predicate: fn(&SyntaxTree<T>) -> bool,
+    ) -> Option<&mut SyntaxTree<T>> {       //hier stand ursprünglich: -> Option<&SyntaxTree<T>>
+        if predicate(self) {
+            return Some(self);
+        } else {
+            for child in &mut self.children {
+                if let Some(node) = child.find_node_mut(predicate) {
+                    return Some(node);
+                }
+            }
+        }
+        None
     }
 
     /// Return a reference to the value carried by the root of this tree
